@@ -146,7 +146,17 @@ async function handlePut(req, res, filePath) {
 
 // DELETE
 async function handleDelete(res, filePath) {
-  sendText(res, 501, "DELETE ще не реалізовано");
+  try {
+    await unlink(filePath);
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      sendText(res, 404, "Картинки немає в кеші");
+    } else {
+      sendText(res, 500, "Не вдалося видалити картинку");
+    }
+    return;
+  }
+  sendText(res, 200, "Картинку видалено з кешу");
 }
 
 // Бере код зі шляху: "/404" дає "404", а "/abc" або "/../x" дає null
