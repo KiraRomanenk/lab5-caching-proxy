@@ -2,10 +2,11 @@
   "name": "lab5-caching-proxy",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "start": "node main.js",
+  "dev": "node --watch main.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KiraRomanenk/lab5-caching-proxy.git"
@@ -13,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/KiraRomanenk/lab5-caching-proxy/issues"
   },
