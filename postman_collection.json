@@ -1,0 +1,251 @@
+{
+  "info": {
+    "_postman_id": "548c37e0-7721-4927-8405-57c0edf7d13a",
+    "name": "Caching proxy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60239364",
+    "_collection_link": "https://go.postman.co/collection/60239364-548c37e0-7721-4927-8405-57c0edf7d13a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET з http.cat",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\npm.test(\"Content-Type image/jpeg\", function () {\r\n  pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"image/jpeg\");\r\n});\r\npm.test(\"Картинка з http.cat\", function () {\r\n  pm.expect(pm.response.headers.get(\"X-Image-Source\")).to.eql(\"http.cat\");\r\n});\r\npm.collectionVariables.set(\"catSize\", pm.response.size().body);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get з кешу",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\npm.test(\"Content-Type image/jpeg\", function () {\r\n  pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"image/jpeg\");\r\n});\r\npm.test(\"Картинка з cache\", function () {\r\n  pm.expect(pm.response.headers.get(\"X-Image-Source\")).to.eql(\"cache\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT своя картинка",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": "/C:/Users/ADMIN/Desktop/unik/веб/lab5-caching-proxy/my.jpg"
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET після PUT",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\npm.test(\"Тепер картинка з кешу\", function () {\r\n  pm.expect(pm.response.headers.get(\"X-Image-Source\")).to.eql(\"cache\");\r\n});\r\npm.test(\"Це наша картинка, а не з http.cat\", function () {\r\n  pm.expect(String(pm.response.size().body)).to.not.eql(String(pm.collectionVariables.get(\"catSize\")));\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE повторно",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "404"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET неіснуючий код",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 404\", function () {\r\n  pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Недозволений метод",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 405\", function () {\r\n  pm.response.to.have.status(405);\r\n});\r\npm.test(\"Заголовок Allow\", function () {\r\n  pm.expect(pm.response.headers.get(\"Allow\")).to.eql(\"GET, PUT, DELETE\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/200",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "200"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "catSize",
+      "value": ""
+    }
+  ]
+}
