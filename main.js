@@ -90,7 +90,41 @@ async function handleRequest(req, res) {
 
 // GET 
 async function handleGet(res, code, filePath) {
-  sendText(res, 501, "GET ще не реалізовано");
+  // Спершу шукаємо в кеші
+  try {
+    const image = await readFile(filePath);
+    sendImage(res, image, "cache");
+    return;
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      sendText(res, 500, "Не вдалося прочитати файл з кешу");
+      return;
+    }
+    // ENOENT означає, що файлу немає: йдемо на http.cat
+  }
+
+  // У кеші немає: запитуємо http.cat
+  let image;
+  try {
+    const response = await superagent.get(SOURCE_URL + code);
+    image = response.body;
+  } catch (error) {
+    if (error.status) {
+      sendText(res, 404, "Картинку для цього коду не знайдено на http.cat");
+    } else {
+      sendText(res, 404, "Не вдалося отримати картинку з http.cat");
+    }
+    return;
+  }
+
+  // Спочатку зберігаємо в кеш, потім відповідаємо
+  try {
+    await writeFile(filePath, image);
+  } catch (error) {
+    sendText(res, 500, "Не вдалося записати картинку в кеш");
+    return;
+  }
+  sendImage(res, image, "http.cat");
 }
 
 // PUT
