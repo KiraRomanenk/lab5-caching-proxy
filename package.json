@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/KiraRomanenk/lab5-caching-proxy/issues"
   },
-  "homepage": "https://github.com/KiraRomanenk/lab5-caching-proxy#readme"
+  "homepage": "https://github.com/KiraRomanenk/lab5-caching-proxy#readme",
+  "dependencies": {
+    "commander": "^15.1.0",
+    "superagent": "^10.4.2"
+  }
 }
