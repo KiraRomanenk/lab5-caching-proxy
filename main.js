@@ -129,7 +129,19 @@ async function handleGet(res, code, filePath) {
 
 // PUT
 async function handlePut(req, res, filePath) {
-  sendText(res, 501, "PUT ще не реалізовано");
+  const body = await buffer(req); // збираємо всі шматки тіла в один Buffer
+  if (body.length === 0) {
+    sendText(res, 400, "Тіло запиту порожнє: надішліть картинку");
+    return;
+  }
+
+  try {
+    await writeFile(filePath, body);
+  } catch (error) {
+    sendText(res, 500, "Не вдалося записати картинку в кеш");
+    return;
+  }
+  sendText(res, 201, "Картинку збережено в кеш");
 }
 
 // DELETE
